@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  postgresdb:
+    image: postgres:latest
+    restart: always
+    container_name: postgresproyecto
+    ports:
+      - '5432:5432'
+    volumes:
+      - proyectoAppVol:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+  api1:
+    build: ./backendnode
+    ports:
+      - 3000:3000
+    volumes:
+      - ./backendnode/src:/app/src
+    depends_on:
+      - postgresdb
+    env_file:
+      - ./backendnode/.env
+  app1:
+    build: ./proyectofront
+    ports:
+      - 5173:5173
+    volumes:
+      - .\proyectofront\src:/app/src
+    depends_on:
+      - postgresdb
+
+volumes:
+  proyectoAppVol:
+
+
